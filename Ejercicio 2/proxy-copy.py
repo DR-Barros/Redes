@@ -18,7 +18,7 @@ def childdeath(signum, frame):
     os.waitpid(-1, os.WNOHANG)
 
 
-def copy_sock(conn1, conn2, file):
+def copy_sock(conn1, conn2, file, string):
 
     while True:
 
@@ -31,11 +31,11 @@ def copy_sock(conn1, conn2, file):
             data = None
 
         if not data: break
-        f = open(file, 'wb') 
-        if conn1 == portin:
-            f.write("\n\n>>> to server\n" + data)
-        else:
-            f.write("\n\n<<< from server\n" + data)
+        f = open(file, 'a')
+        f.write(string)
+        f.close()
+        f = open(file, 'ab')
+        f.write(data)
         f.close()
         conn2.send(data)
 
@@ -65,11 +65,11 @@ def proxy(conn, host, portout, file):
 
 # copy_sock() corre en ambos threads, uno de conn->conn2 y otro de conn2->conn
 
-    newthread1 = threading.Thread(target=copy_sock, daemon=True, args=(conn,conn2, file)) # el flag daemon es para que muera si muere el otro 
+    newthread1 = threading.Thread(target=copy_sock, daemon=True, args=(conn,conn2, file, "\n\n>>> to server\n")) # el flag daemon es para que muera si muere el otro 
 
     newthread1.start()
 
-    copy_sock(conn2, conn, file)
+    copy_sock(conn2, conn, file, "\n\n<<< from server\n")
 
     print('Cliente desconectado')
 
