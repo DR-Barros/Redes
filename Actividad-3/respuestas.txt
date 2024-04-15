@@ -1,0 +1,368 @@
+1) respuestas de mil.cl
+
+dig ns mil.cl @a.nic.cl
+
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 64456
+;; flags: qr rd; QUERY: 1, ANSWER: 0, AUTHORITY: 2, ADDITIONAL: 3
+;; WARNING: recursion requested but not available
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 1232
+;; QUESTION SECTION:
+;mil.cl.				IN	NS
+
+;; AUTHORITY SECTION:
+mil.cl.			3600	IN	NS	ns1.mil.cl.
+mil.cl.			3600	IN	NS	ns2.mil.cl.
+
+;; ADDITIONAL SECTION:
+ns1.mil.cl.		3600	IN	A	200.11.68.132
+ns2.mil.cl.		3600	IN	A	200.54.212.36
+
+;; Query time: 11 msec
+;; SERVER: 190.124.27.10#53(a.nic.cl) (UDP)
+;; WHEN: Sun Apr 14 18:49:32 -04 2024
+;; MSG SIZE  rcvd: 103
+
+dig ns mil.cl @ns1.mil.cl
+dig: couldn't get address for 'ns1.mil.cl': not found
+
+
+dig ns mil.cl @ns2.mil.cl
+
+; <<>> DiG 9.18.18-0ubuntu0.22.04.2-Ubuntu <<>> ns mil.cl @ns2.mil.cl
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 38140
+;; flags: qr aa rd; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 2
+;; WARNING: recursion requested but not available
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 4096
+;; QUESTION SECTION:
+;mil.cl.				IN	NS
+
+;; ANSWER SECTION:
+mil.cl.			600	IN	NS	ns2.mil.cl.
+
+;; ADDITIONAL SECTION:
+ns2.mil.cl.		600	IN	A	200.54.212.36
+
+;; Query time: 39 msec
+;; SERVER: 200.54.212.36#53(ns2.mil.cl) (UDP)
+;; WHEN: Sun Apr 14 18:50:54 -04 2024
+;; MSG SIZE  rcvd: 69
+
+
+2) respuestas de gob.cl
+
+dig ns gob.cl @a.nic.cl
+
+; <<>> DiG 9.18.18-0ubuntu0.22.04.2-Ubuntu <<>> ns gob.cl @a.nic.cl
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 36269
+;; flags: qr aa rd; QUERY: 1, ANSWER: 6, AUTHORITY: 0, ADDITIONAL: 9
+;; WARNING: recursion requested but not available
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 1232
+;; QUESTION SECTION:
+;gob.cl.                                IN      NS
+
+;; ANSWER SECTION:
+gob.cl.                 10800   IN      NS      a.nic.cl.
+gob.cl.                 10800   IN      NS      b.nic.cl.
+gob.cl.                 10800   IN      NS      ns.gob.cl.
+gob.cl.                 10800   IN      NS      ns2.gob.cl.
+gob.cl.                 10800   IN      NS      ns6.gob.cl.
+gob.cl.                 10800   IN      NS      ns7.gob.cl.
+
+;; ADDITIONAL SECTION:
+ns.gob.cl.              3600    IN      A       163.247.54.111
+ns.gob.cl.              3600    IN      AAAA    2801:2:85::54:0:111
+ns2.gob.cl.             3600    IN      A       163.247.70.25
+ns2.gob.cl.             3600    IN      AAAA    2801:2:85::70:0:25
+ns6.gob.cl.             3600    IN      A       163.247.72.25
+ns6.gob.cl.             3600    IN      AAAA    2801:2:85::72:0:25
+ns7.gob.cl.             3600    IN      A       163.247.75.25
+ns7.gob.cl.             3600    IN      AAAA    2801:2:85::75:0:25
+
+;; Query time: 12 msec
+;; SERVER: 190.124.27.10#53(a.nic.cl) (UDP)
+;; WHEN: Sun Apr 14 18:54:19 -04 2024
+;; MSG SIZE  rcvd: 322
+
+
+dig ns gob.cl @ns.gob.cl
+
+; <<>> DiG 9.18.18-0ubuntu0.22.04.2-Ubuntu <<>> ns gob.cl @ns.gob.cl
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 22408
+;; flags: qr aa rd; QUERY: 1, ANSWER: 6, AUTHORITY: 0, ADDITIONAL: 9
+;; WARNING: recursion requested but not available
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 1232
+; COOKIE: c8b1dcdeca360d7857f03d60661c5ed87e198dd03357986f (good)
+;; QUESTION SECTION:
+;gob.cl.				IN	NS
+
+;; ANSWER SECTION:
+gob.cl.			10800	IN	NS	ns2.gob.cl.
+gob.cl.			10800	IN	NS	ns6.gob.cl.
+gob.cl.			10800	IN	NS	ns7.gob.cl.
+gob.cl.			10800	IN	NS	a.nic.cl.
+gob.cl.			10800	IN	NS	b.nic.cl.
+gob.cl.			10800	IN	NS	ns.gob.cl.
+
+;; ADDITIONAL SECTION:
+ns.gob.cl.		3600	IN	AAAA	2801:2:85::54:0:111
+ns2.gob.cl.		3600	IN	AAAA	2801:2:85::70:0:25
+ns6.gob.cl.		3600	IN	AAAA	2801:2:85::72:0:25
+ns7.gob.cl.		3600	IN	AAAA	2801:2:85::75:0:25
+ns.gob.cl.		3600	IN	A	163.247.54.111
+ns2.gob.cl.		3600	IN	A	163.247.70.25
+ns6.gob.cl.		3600	IN	A	163.247.72.25
+ns7.gob.cl.		3600	IN	A	163.247.75.25
+
+;; Query time: 8 msec
+;; SERVER: 2801:2:85::54:0:111#53(ns.gob.cl) (UDP)
+;; WHEN: Sun Apr 14 18:55:20 -04 2024
+;; MSG SIZE  rcvd: 346
+
+
+dig ns gob.cl @ns2.gob.cl
+
+; <<>> DiG 9.18.18-0ubuntu0.22.04.2-Ubuntu <<>> ns gob.cl @ns2.gob.cl
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 25840
+;; flags: qr aa rd; QUERY: 1, ANSWER: 6, AUTHORITY: 0, ADDITIONAL: 9
+;; WARNING: recursion requested but not available
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 1232
+; COOKIE: 043f3e02bf72404b95746cf5661c5ef36d08de1cd7486427 (good)
+;; QUESTION SECTION:
+;gob.cl.				IN	NS
+
+;; ANSWER SECTION:
+gob.cl.			10800	IN	NS	ns2.gob.cl.
+gob.cl.			10800	IN	NS	ns.gob.cl.
+gob.cl.			10800	IN	NS	b.nic.cl.
+gob.cl.			10800	IN	NS	ns6.gob.cl.
+gob.cl.			10800	IN	NS	ns7.gob.cl.
+gob.cl.			10800	IN	NS	a.nic.cl.
+
+;; ADDITIONAL SECTION:
+ns.gob.cl.		3600	IN	AAAA	2801:2:85::54:0:111
+ns2.gob.cl.		3600	IN	AAAA	2801:2:85::70:0:25
+ns6.gob.cl.		3600	IN	AAAA	2801:2:85::72:0:25
+ns7.gob.cl.		3600	IN	AAAA	2801:2:85::75:0:25
+ns.gob.cl.		3600	IN	A	163.247.54.111
+ns2.gob.cl.		3600	IN	A	163.247.70.25
+ns6.gob.cl.		3600	IN	A	163.247.72.25
+ns7.gob.cl.		3600	IN	A	163.247.75.25
+
+;; Query time: 12 msec
+;; SERVER: 2801:2:85::70:0:25#53(ns2.gob.cl) (UDP)
+;; WHEN: Sun Apr 14 18:55:47 -04 2024
+;; MSG SIZE  rcvd: 346
+
+
+dig ns gob.cl @ns6.gob.cl
+
+; <<>> DiG 9.18.18-0ubuntu0.22.04.2-Ubuntu <<>> ns gob.cl @ns6.gob.cl
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 44878
+;; flags: qr aa rd; QUERY: 1, ANSWER: 6, AUTHORITY: 0, ADDITIONAL: 9
+;; WARNING: recursion requested but not available
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 1232
+; COOKIE: df5173dd3834709a9f42f717661c5d204e70e4b5ae12b8e3 (good)
+;; QUESTION SECTION:
+;gob.cl.				IN	NS
+
+;; ANSWER SECTION:
+gob.cl.			10800	IN	NS	ns2.gob.cl.
+gob.cl.			10800	IN	NS	ns7.gob.cl.
+gob.cl.			10800	IN	NS	a.nic.cl.
+gob.cl.			10800	IN	NS	b.nic.cl.
+gob.cl.			10800	IN	NS	ns.gob.cl.
+gob.cl.			10800	IN	NS	ns6.gob.cl.
+
+;; ADDITIONAL SECTION:
+ns.gob.cl.		3600	IN	AAAA	2801:2:85::54:0:111
+ns2.gob.cl.		3600	IN	AAAA	2801:2:85::70:0:25
+ns6.gob.cl.		3600	IN	AAAA	2801:2:85::72:0:25
+ns7.gob.cl.		3600	IN	AAAA	2801:2:85::75:0:25
+ns.gob.cl.		3600	IN	A	163.247.54.111
+ns2.gob.cl.		3600	IN	A	163.247.70.25
+ns6.gob.cl.		3600	IN	A	163.247.72.25
+ns7.gob.cl.		3600	IN	A	163.247.75.25
+
+;; Query time: 48 msec
+;; SERVER: 2801:2:85::72:0:25#53(ns6.gob.cl) (UDP)
+;; WHEN: Sun Apr 14 18:56:09 -04 2024
+;; MSG SIZE  rcvd: 346
+
+
+dig ns gob.cl @ns7.gob.cl
+
+; <<>> DiG 9.18.18-0ubuntu0.22.04.2-Ubuntu <<>> ns gob.cl @ns7.gob.cl
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 15715
+;; flags: qr aa rd; QUERY: 1, ANSWER: 6, AUTHORITY: 0, ADDITIONAL: 9
+;; WARNING: recursion requested but not available
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 1232
+; COOKIE: 8b2616f41389295d350f0e16661c5f1522049779cdf35c52 (good)
+;; QUESTION SECTION:
+;gob.cl.				IN	NS
+
+;; ANSWER SECTION:
+gob.cl.			10800	IN	NS	b.nic.cl.
+gob.cl.			10800	IN	NS	ns2.gob.cl.
+gob.cl.			10800	IN	NS	ns7.gob.cl.
+gob.cl.			10800	IN	NS	ns.gob.cl.
+gob.cl.			10800	IN	NS	ns6.gob.cl.
+gob.cl.			10800	IN	NS	a.nic.cl.
+
+;; ADDITIONAL SECTION:
+ns.gob.cl.		3600	IN	AAAA	2801:2:85::54:0:111
+ns2.gob.cl.		3600	IN	AAAA	2801:2:85::70:0:25
+ns6.gob.cl.		3600	IN	AAAA	2801:2:85::72:0:25
+ns7.gob.cl.		3600	IN	AAAA	2801:2:85::75:0:25
+ns.gob.cl.		3600	IN	A	163.247.54.111
+ns2.gob.cl.		3600	IN	A	163.247.70.25
+ns6.gob.cl.		3600	IN	A	163.247.72.25
+ns7.gob.cl.		3600	IN	A	163.247.75.25
+
+;; Query time: 68 msec
+;; SERVER: 2801:2:85::75:0:25#53(ns7.gob.cl) (UDP)
+;; WHEN: Sun Apr 14 18:56:21 -04 2024
+;; MSG SIZE  rcvd: 346
+
+
+3) respuestas de itau.cl
+
+dig ns itau.cl @a.nic.cl
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 52321
+;; flags: qr rd; QUERY: 1, ANSWER: 0, AUTHORITY: 4, ADDITIONAL: 6
+;; WARNING: recursion requested but not available
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 1232
+;; QUESTION SECTION:
+;itau.cl.			IN	NS
+
+;; AUTHORITY SECTION:
+itau.cl.		3600	IN	NS	ns.itau.cl.
+itau.cl.		3600	IN	NS	ns1.itau.cl.
+itau.cl.		3600	IN	NS	ns2.itau.cl.
+itau.cl.		3600	IN	NS	ns3.itau.cl.
+
+;; ADDITIONAL SECTION:
+ns.itau.cl.		3600	IN	A	164.77.101.172
+ns.itau.cl.		3600	IN	A	200.54.67.188
+ns1.itau.cl.		3600	IN	A	200.11.88.138
+ns2.itau.cl.		3600	IN	A	190.153.208.74
+ns3.itau.cl.		3600	IN	A	200.27.77.242
+
+;; Query time: 48 msec
+;; SERVER: 190.124.27.10#53(a.nic.cl) (UDP)
+;; WHEN: Sun Apr 14 18:57:07 -04 2024
+;; MSG SIZE  rcvd: 187
+
+dig ns itau.cl @ns.itau.cl
+
+; <<>> DiG 9.18.18-0ubuntu0.22.04.2-Ubuntu <<>> ns itau.cl @ns.itau.cl
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 21781
+;; flags: qr aa rd; QUERY: 1, ANSWER: 4, AUTHORITY: 0, ADDITIONAL: 5
+;; WARNING: recursion requested but not available
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 4096
+;; QUESTION SECTION:
+;itau.cl.			IN	NS
+
+;; ANSWER SECTION:
+itau.cl.		3600	IN	NS	ns1.itau.cl.
+itau.cl.		3600	IN	NS	ns.itau.cl.
+itau.cl.		3600	IN	NS	ns3.itau.cl.
+itau.cl.		3600	IN	NS	ns2.itau.cl.
+
+;; ADDITIONAL SECTION:
+ns.itau.cl.		10	IN	A	164.77.101.172
+ns1.itau.cl.		10	IN	A	200.11.88.138
+ns2.itau.cl.		10	IN	A	190.153.208.74
+ns3.itau.cl.		10	IN	A	200.27.77.242
+
+;; Query time: 12 msec
+;; SERVER: 164.77.101.172#53(ns.itau.cl) (UDP)
+;; WHEN: Sun Apr 14 18:58:04 -04 2024
+;; MSG SIZE  rcvd: 171
+
+
+dig ns itau.cl @ns1.itau.cl
+
+; <<>> DiG 9.18.18-0ubuntu0.22.04.2-Ubuntu <<>> ns itau.cl @ns1.itau.cl
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 21829
+;; flags: qr aa rd; QUERY: 1, ANSWER: 4, AUTHORITY: 0, ADDITIONAL: 5
+;; WARNING: recursion requested but not available
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 4096
+;; QUESTION SECTION:
+;itau.cl.			IN	NS
+
+;; ANSWER SECTION:
+itau.cl.		3600	IN	NS	ns2.itau.cl.
+itau.cl.		3600	IN	NS	ns3.itau.cl.
+itau.cl.		3600	IN	NS	ns.itau.cl.
+itau.cl.		3600	IN	NS	ns1.itau.cl.
+
+;; ADDITIONAL SECTION:
+ns.itau.cl.		10	IN	A	164.77.101.172
+ns1.itau.cl.		10	IN	A	200.11.88.138
+ns2.itau.cl.		10	IN	A	190.153.208.74
+ns3.itau.cl.		10	IN	A	200.27.77.242
+
+;; Query time: 8 msec
+;; SERVER: 200.11.88.138#53(ns1.itau.cl) (UDP)
+;; WHEN: Sun Apr 14 18:58:35 -04 2024
+;; MSG SIZE  rcvd: 171
+
+dig ns itau.cl @ns2.itau.cl
+;; communications error to 190.153.208.74#53: connection refused
+;; communications error to 190.153.208.74#53: connection refused
+;; communications error to 190.153.208.74#53: connection refused
+
+; <<>> DiG 9.18.18-0ubuntu0.22.04.2-Ubuntu <<>> ns itau.cl @ns2.itau.cl
+;; global options: +cmd
+;; no servers could be reached
+
+dig ns itau.cl @ns3.itau.cl
+;; communications error to 200.27.77.242#53: connection refused
+;; communications error to 200.27.77.242#53: connection refused
+;; communications error to 200.27.77.242#53: connection refused
+
+; <<>> DiG 9.18.18-0ubuntu0.22.04.2-Ubuntu <<>> ns itau.cl @ns3.itau.cl
+;; global options: +cmd
+;; no servers could be reached
+
+
