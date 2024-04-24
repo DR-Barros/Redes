@@ -4,25 +4,23 @@
 import jsockets
 import sys, threading
 import time
+import signal
+import os
 
 #funcion que lee desde el socket y lo guarda en un archivo
 def Rdr(s, fileout, dist, pack_sz, datosCompartidos):
-    while True:
-        try:
-            data=s.recv(pack_sz)
-        except:
-            data = None
-        if not data: 
-            break
-        with open(fileout, 'ab') as f:
-            f.write(data)
-        datosCompartidos['lock'].acquire()
-        datosCompartidos['read'] += 1
-        if datosCompartidos['sent'] - datosCompartidos['read'] > dist:
-            datosCompartidos['distanciaEvent'].clear() # si se excede la distancia, se espera
-        else:
-            datosCompartidos['distanciaEvent'].set()
-        datosCompartidos['lock'].release()
+    with open(fileout, 'wb') as f:
+        while True:
+            try:
+                data=s.recv(pack_sz)
+            except:
+                continue
+            if data: 
+                f.write(data)
+                with datosCompartidos['lock']:
+                    datosCompartidos['read'] += 1
+                    if datosCompartidos['sent'] - datosCompartidos['read'] <= dist:
+                        datosCompartidos['distanciaEvent'].set()
 
 if len(sys.argv) != 7:
     print('Use: '+sys.argv[0]+' pack_sz dist filein fileout host port')
@@ -47,9 +45,9 @@ datosCompartidos = {
     'distanciaEvent': threading.Event(),
     'read': 0,
     'sent': 0,
-    'lock': threading.Lock()
-
+    'lock': threading.Lock(),
 }
+datosCompartidos['distanciaEvent'].set()  # inicialmente permitir enviar
 # thread para leer desde socket y escribir en fileout
 newthread = threading.Thread(target=Rdr, args=(s, fileout, dist, pack_sz, datosCompartidos))
 newthread.start() # thread para escribir hacia socket
@@ -63,14 +61,15 @@ with open(filein, 'br') as f:
         if not data:
             break
         s.send(data)
-        datosCompartidos['lock'].acquire()
-        datosCompartidos['sent'] += 1
-        datosCompartidos['lock'].release()
-        
-        
+        with datosCompartidos['lock']:
+            datosCompartidos['sent'] += 1
+            if datosCompartidos['sent'] - datosCompartidos['read'] > dist:
+                datosCompartidos['distanciaEvent'].clear() 
 
-time.sleep(3)  # dar tiempo para que vuelva la respuesta
+newthread.join(timeout=0.8)
 s.close()
-print('Time:', time.time()-tiempo)
+print("Usando: pack:", pack_sz, "dist:", dist)
+print('Tiempo total:', time.time()-tiempo)
 print('Sent', datosCompartidos['sent'], 'packets')
 print('Received', datosCompartidos['read'], 'packets')
+os.kill(os.getpid(), signal.SIGKILL)
