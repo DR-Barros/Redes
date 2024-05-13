@@ -16,23 +16,26 @@ def Rdr(s, fileout, pack_sz, datosCompartidos):
                 if not data:
                     break
                 with datosCompartidos['lock']:
-                    if datosCompartidos['ack_expected'] == datosCompartidos['ack_received']:
-                        f.write(data)
-                        datosCompartidos['ack_received'] = not datosCompartidos['ack_received']
+                    #si el dato recibido es el esperado(min_send), se escribe en el archivo
+                    if int(data[:4]) == datosCompartidos['min_send']:
+                        f.write(data[4:])
+                        datosCompartidos['ventana'].pop(0)
+                        datosCompartidos['min_send'] = (datosCompartidos['min_send'] + 1)%10000
                         datosCompartidos['send_new'].set()
             except:
                 continue
 
-if len(sys.argv) != 6:
-    print('Use: '+sys.argv[0]+' pack_sz filein fileout host port')
+if len(sys.argv) != 7:
+    print('Use: '+sys.argv[0]+' pack_sz win filein fileout host port')
     sys.exit(1)
 #obtenemos las variables de los argumentos
 pack_sz = int(sys.argv[1])
-filein = sys.argv[2]
-fileout = sys.argv[3]
+win = int(sys.argv[2])
+filein = sys.argv[3]
+fileout = sys.argv[4]
 
 
-s = jsockets.socket_udp_connect(sys.argv[4], int(sys.argv[5]))
+s = jsockets.socket_udp_connect(sys.argv[5], int(sys.argv[6]))
 if s is None:
     print('could not open socket')
     sys.exit(1)
@@ -43,9 +46,9 @@ s.recv(1024)
 
 datosCompartidos = {
     'send_new': threading.Event(),
-    'ack_received': True,
-    'ack_expected': True,
+    'min_send': 0, # numero entre 0 y 9999
     'lock': threading.Lock(),
+    'ventana' : []
 }
 datosCompartidos['send_new'].set()  # inicialmente permitir enviar
 # thread para leer desde socket y escribir en fileout
@@ -53,26 +56,33 @@ newthread = threading.Thread(target=Rdr, args=(s, fileout, pack_sz, datosCompart
 newthread.start() # thread para escribir hacia socket
 
 tiempo = time.time()
+
+finished = False
 # En este otro thread leo desde filein hacia socket:
 with open(filein, 'br') as f:
-    data = f.read(pack_sz)
-    while True:
+    while not finished or len(datosCompartidos['ventana']) > 0:
         datosCompartidos['send_new'].wait(0.5) 
         with datosCompartidos['lock']:
-            if datosCompartidos['ack_expected'] == datosCompartidos['ack_received']:
-                s.send(data)
-            else:
+            if not finished and len(datosCompartidos['ventana']) < win:
                 data = f.read(pack_sz)
                 if not data:
-                    break
-                s.send(data)
-                datosCompartidos['ack_received'] = not datosCompartidos['ack_received']
+                    finished = True
+                else:
+                    s.send(str((datosCompartidos['min_send'] + len(datosCompartidos['ventana']))%10000).zfill(4).encode() + data)
+                    datosCompartidos['ventana'].append(data)
+            else:
+                for i in range(win):
+                    if i < len(datosCompartidos['ventana']):
+                        s.send(str((datosCompartidos['min_send'] + i)%10000).encode() + datosCompartidos['ventana'][i])
+                    else:
+                        break
             datosCompartidos['send_new'].wait()
             datosCompartidos['send_new'].clear()
 
 
+
 newthread.join(timeout=0.8)
 s.close()
-print("Usando: pack:", pack_sz, "dist:", 1)
+print("Usando: pack:", pack_sz, "win:", sys.argv[2])
 print('Tiempo total:', time.time()-tiempo)
 os.kill(os.getpid(), signal.SIGKILL)
