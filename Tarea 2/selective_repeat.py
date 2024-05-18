@@ -58,12 +58,12 @@ winN = [i for i in range(win)]
 datosCompartidos = {
     'send_new': threading.Event(),
     'lock': threading.Lock(),
-    'min_send': 0,
-    'winSendNum': [],
-    'winSendData': [],
-    'winRecvNum': winN,
-    'winRecvData': winR,
-    'finished': False
+    'min_send': 0, # numero del primer paquete de la ventana
+    'winSendNum': [], # ventana de nuumero de paquetes enviados
+    'winSendData': [], # ventana de datos enviados
+    'winRecvNum': winN, # ventana de numero de paquetes recibidos
+    'winRecvData': winR, # ventana de datos recibidos
+    'finished': False # bandera para saber si se termino de enviar
 }
 datosCompartidos['send_new'].set()  # inicialmente permitir enviar
 # thread para leer desde socket y escribir en fileout
