@@ -86,7 +86,7 @@ with open(filein, 'br') as f:
                 datosCompartidos['winSendData'].append(data)
         else:
             datosCompartidos['lock'].release()
-            datosCompartidos['send_new'].wait(0.5)
+            datosCompartidos['send_new'].wait(1) #espera un tiempo de 1 segundo
             datosCompartidos['lock'].acquire()
             for i in range(win):
                 if i < len(datosCompartidos['winSendNum']):

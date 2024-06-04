@@ -15,11 +15,12 @@ def Rdr(s, fileout, pack_sz, datosCompartidos):
                 data=s.recv(pack_sz)
                 if not data:
                     break
-                with datosCompartidos['lock']:
-                    if datosCompartidos['ack_expected'] == datosCompartidos['ack_received']:
-                        f.write(data)
-                        datosCompartidos['ack_received'] = not datosCompartidos['ack_received']
-                        datosCompartidos['send_new'].set()
+                datosCompartidos["lock"].acquire()
+                if datosCompartidos['ack_expected'] == datosCompartidos['ack_received']:
+                    f.write(data)
+                    datosCompartidos['ack_received'] = not datosCompartidos['ack_received']
+                    datosCompartidos['send_new'].set()
+                datosCompartidos["lock"].release()
             except:
                 continue
 
@@ -58,17 +59,18 @@ with open(filein, 'br') as f:
     data = f.read(pack_sz)
     while True:
         datosCompartidos['send_new'].wait(0.5) 
-        with datosCompartidos['lock']:
-            if datosCompartidos['ack_expected'] == datosCompartidos['ack_received']:
-                s.send(data)
-            else:
-                data = f.read(pack_sz)
-                if not data:
-                    break
-                s.send(data)
-                datosCompartidos['ack_received'] = not datosCompartidos['ack_received']
-            datosCompartidos['send_new'].wait()
-            datosCompartidos['send_new'].clear()
+        datosCompartidos['lock'].acquire()
+        if datosCompartidos['ack_expected'] == datosCompartidos['ack_received']:
+            s.send(data)
+        else:
+            data = f.read(pack_sz)
+            if not data:
+                break
+            s.send(data)
+            datosCompartidos['ack_received'] = not datosCompartidos['ack_received']
+        datosCompartidos['send_new'].wait()
+        datosCompartidos['send_new'].clear()
+        datosCompartidos['lock'].release()
 
 
 newthread.join(timeout=0.8)

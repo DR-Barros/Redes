@@ -15,13 +15,13 @@ def Rdr(s, fileout, pack_sz, datosCompartidos):
                 data=s.recv(pack_sz)
                 if not data:
                     break
-                with datosCompartidos['lock']:
-                    #si el dato recibido es el esperado(min_send), se escribe en el archivo
-                    if int(data[:4]) == datosCompartidos['min_send']:
-                        f.write(data[4:])
-                        datosCompartidos['ventana'].pop(0)
-                        datosCompartidos['min_send'] = (datosCompartidos['min_send'] + 1)%10000
-                        datosCompartidos['send_new'].set()
+                datosCompartidos['lock'].acquire()
+                if int(data[:4]) == datosCompartidos['min_send']:
+                    f.write(data[4:])
+                    datosCompartidos['ventana'].pop(0)
+                    datosCompartidos['min_send'] = (datosCompartidos['min_send'] + 1)%10000
+                    datosCompartidos['send_new'].set()
+                datosCompartidos['lock'].release()
             except:
                 continue
 
@@ -62,22 +62,23 @@ finished = False
 with open(filein, 'br') as f:
     while not finished or len(datosCompartidos['ventana']) > 0:
         datosCompartidos['send_new'].wait(0.5) 
-        with datosCompartidos['lock']:
-            if not finished and len(datosCompartidos['ventana']) < win:
-                data = f.read(pack_sz)
-                if not data:
-                    finished = True
-                else:
-                    s.send(str((datosCompartidos['min_send'] + len(datosCompartidos['ventana']))%10000).zfill(4).encode() + data)
-                    datosCompartidos['ventana'].append(data)
+        datosCompartidos['lock'].acquire()
+        if not finished and len(datosCompartidos['ventana']) < win:
+            data = f.read(pack_sz)
+            if not data:
+                finished = True
             else:
-                for i in range(win):
-                    if i < len(datosCompartidos['ventana']):
-                        s.send(str((datosCompartidos['min_send'] + i)%10000).encode() + datosCompartidos['ventana'][i])
-                    else:
-                        break
-            datosCompartidos['send_new'].wait()
-            datosCompartidos['send_new'].clear()
+                s.send(str((datosCompartidos['min_send'] + len(datosCompartidos['ventana']))%10000).zfill(4).encode() + data)
+                datosCompartidos['ventana'].append(data)
+        else:
+            for i in range(win):
+                if i < len(datosCompartidos['ventana']):
+                    s.send(str((datosCompartidos['min_send'] + i)%10000).encode() + datosCompartidos['ventana'][i])
+                else:
+                    break
+        datosCompartidos['send_new'].wait()
+        datosCompartidos['send_new'].clear()
+        datosCompartidos['lock'].release()
 
 
 
