@@ -30,6 +30,7 @@ newthread = threading.Thread(target=Rdr, args=(s, fileout))
 newthread.start()
 
 # En este otro thread leo desde filein hacia el socket:
+tiempo_inicial = time.time()
 with open(filein, 'br') as f:
     while True:
         data = f.read(1500)
@@ -38,5 +39,7 @@ with open(filein, 'br') as f:
         s.send(data)
 
 time.sleep(3)  # dar tiempo para que vuelva la respuesta
+print('Fin del cliente')
+print('Tiempo total:', time.time() - tiempo_inicial)
 s.close()
 
